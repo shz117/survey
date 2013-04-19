@@ -44,7 +44,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.questioin13bL.text=NSLocalizedString(@"questioin13bL", nil);
-    self.questioin13bAArray = [NSArray arrayWithObjects: NSLocalizedString(@"question13bAnswer8", nil),NSLocalizedString(@"question13bAnswer0", nil),NSLocalizedString(@"question13bAnswer1", nil),nil];
+    self.questioin13bAArray = [NSArray arrayWithObjects: NSLocalizedString(@"question13bAnswer0", nil),NSLocalizedString(@"question13bAnswer1", nil),NSLocalizedString(@"question13bAnswer8", nil),nil];
     self.question13cL.text=NSLocalizedString(@"question13cL", nil);
     self.question13cRetailL.text=NSLocalizedString(@"question13cRetailL", nil);
     self.question13cOfficeL.text=NSLocalizedString(@"question13cOfficeL", nil);
@@ -74,7 +74,7 @@
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    BOOL isYes=row==2;
+    BOOL isYes=row==1;
     self.question13cL.hidden=!isYes;
     self.question13cRetailL.hidden=!isYes;
     self.question13cRetailA.hidden=!isYes;

@@ -34,7 +34,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.question4aTitle.text=NSLocalizedString(@"question4aTitle", nil);
-    self.question4aAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"question4aAnswer8", nil),NSLocalizedString(@"question4aAnswer0", nil),NSLocalizedString(@"question4aAnswer1", nil),NSLocalizedString(@"question4aAnswer2", nil),nil];
+    self.question4aAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"question4aAnswer1", nil),NSLocalizedString(@"question4aAnswer2", nil),NSLocalizedString(@"question4aAnswer0", nil),NSLocalizedString(@"question4aAnswer8", nil),nil];
     self.question4bTitle.text=NSLocalizedString(@"question4bTitle", nil);
     self.question4bAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"question4bAnswer8", nil),NSLocalizedString(@"question4bAnswer0", nil),NSLocalizedString(@"question4bAnswer1", nil),nil];
 }
@@ -59,6 +59,14 @@
 	return [self.question4bAnswerArray count];
 }
 
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    BOOL isYes=row==1||row==0;
+    self.question4bTitle.hidden=!isYes;
+    self.question4bAnswer.hidden=!isYes;
+}
+
+
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
 	return 1;
@@ -69,7 +77,7 @@
     if (!question4aSelectedRow) {
         question4aAnswerValue=8;
     } else {
-        question4aAnswerValue=question4aSelectedRow-1;
+        question4aAnswerValue=question4aSelectedRow;
     }
     NSInteger question4bSelectedRow=[self.question4bAnswer selectedRowInComponent:0];
     if (!question4bSelectedRow) {

@@ -104,7 +104,7 @@
     // Clear the current image so that we get a nice visual cue if the receive fails.
     [self.listEntries removeAllObjects];
     [self.tableView reloadData];
-    [self updateStatus:@"Receiving"];
+    [self updateStatus:@"Receiving"];    
     self.listOrCancelButton.title = @"Cancel";
     [self.activityIndicator startAnimating];
     [[NetworkManager sharedInstance] didStartNetworkOperation];

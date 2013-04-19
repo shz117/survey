@@ -61,7 +61,7 @@ enum {
     kSendBufferSize = 32768
 };
 
-@interface IMI_CStartViewController () <UITextFieldDelegate, NSStreamDelegate>
+@interface IMI_CStartViewController () <UITextFieldDelegate, NSStreamDelegate, MFMailComposeViewControllerDelegate>
 
 // things for IB
 
@@ -72,8 +72,8 @@ enum {
 @property (nonatomic, strong, readwrite) IBOutlet UIActivityIndicatorView *   activityIndicator;
 @property (nonatomic, strong, readwrite) IBOutlet UIBarButtonItem *           cancelButton;
 
-- (IBAction)sendAction:(UIView *)sender;
-- (IBAction)cancelAction:(id)sender;
+//- (IBAction)sendAction:(UIView *)sender;
+//- (IBAction)cancelAction:(id)sender;
 
 // Properties that don't need to be seen by the outside world.
 
@@ -82,11 +82,13 @@ enum {
 @property (nonatomic, strong, readwrite) NSInputStream *   fileStream;
 @property (nonatomic, assign, readonly ) uint8_t *         buffer;
 @property (nonatomic, assign, readwrite) size_t            bufferOffset;
+@property (weak, nonatomic) IBOutlet UIButton *emailButton;
 @property (nonatomic, assign, readwrite) size_t            bufferLimit;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *uploadButton;
 - (IBAction)uploadAction:(id)sender;
-
+- (IBAction)emailAction:(id)sender;
+@property(nonatomic,assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
 @end
 
 @implementation IMI_CStartViewController
@@ -159,7 +161,7 @@ enum {
     
     // First get and check the URL.
     
-    url = [[NetworkManager sharedInstance] smartURLForString:@"ftp://urbanimprint.com/public_ftp/incoming/SurveyResults/"];
+    url = [[NetworkManager sharedInstance] smartURLForString:@"ftp://urbanimprint.com/SurveyResults/"];
     success = (url != nil);
     
     if (success) {
@@ -192,9 +194,9 @@ enum {
                                                CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url)
                                                );
         assert(self.networkStream != nil);
-            success = [self.networkStream setProperty:@"urimprin" forKey:(id)kCFStreamPropertyFTPUserName];
+            success = [self.networkStream setProperty:@"jeremy@urbanimprint.com" forKey:(id)kCFStreamPropertyFTPUserName];
             assert(success);
-            success = [self.networkStream setProperty:@"China2012!" forKey:(id)kCFStreamPropertyFTPPassword];
+            success = [self.networkStream setProperty:@"China2012!!" forKey:(id)kCFStreamPropertyFTPPassword];
             assert(success);        
         self.networkStream.delegate = self;
         [self.networkStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -205,6 +207,42 @@ enum {
         [self sendDidStart];
     }
 }
+
+//send to email address
+- (void)startSend: (NSString *)filePath toEmail: (NSString *)emailAddress
+{
+    MFMailComposeViewController *mailCompose = [[MFMailComposeViewController alloc] init];
+    if(mailCompose)
+    {
+        //设置代理
+        [mailCompose setMailComposeDelegate: self];
+        
+        NSArray *toAddress = [NSArray arrayWithObject:emailAddress];
+        NSArray *ccAddress = [NSArray arrayWithObject:@"276985858@qq.com"];;
+        NSString *emailBody = @"<H1>IMI_C Survey results</H1>";
+        
+        //设置收件人
+        [mailCompose setToRecipients:toAddress];
+        //设置抄送人
+        [mailCompose setCcRecipients:ccAddress];
+        //设置邮件内容
+        [mailCompose setMessageBody:emailBody isHTML:YES];
+        
+        NSData* pData = [[NSData alloc]initWithContentsOfFile:filePath];
+        
+        //设置邮件主题
+        [mailCompose setSubject:@"Subject"];
+        //设置邮件附件{mimeType:文件格式|fileName:文件名}
+        [mailCompose addAttachmentData:pData mimeType:@"csv" fileName:@" "];
+        //设置邮件视图在当前视图上显示方式
+        //[self presentModalViewController:mailCompose animated:YES];
+        [self presentViewController:mailCompose animated:YES completion:NULL];
+    }
+    mailCompose = nil;
+    return;
+
+}
+
 
 - (void)stopSendWithStatus:(NSString *)statusString
 {
@@ -263,6 +301,8 @@ enum {
                 assert(bytesWritten != 0);
                 if (bytesWritten == -1) {
                     [self stopSendWithStatus:@"Network write error"];
+                    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadButton", nil) message:NSLocalizedString(@"Upload failed", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+
                 } else {
                     self.bufferOffset += bytesWritten;
                 }
@@ -282,22 +322,22 @@ enum {
 
 #pragma mark * Actions
 
-- (IBAction)sendAction:(UIView *)sender
-{
-    assert( [sender isKindOfClass:[UIView class]] );
-    
-    if ( ! self.isSending ) {
-        NSString *  filePath;
-        
-        // User the tag on the UIButton to determine which image to send.
-        
-        assert(sender.tag >= 0);
-        filePath = [[NetworkManager sharedInstance] pathForTestImage:(NSUInteger) sender.tag];
-        assert(filePath != nil);
-        
-        [self startSend:filePath];
-    }
-}
+//- (IBAction)sendAction:(UIView *)sender
+//{
+//    assert( [sender isKindOfClass:[UIView class]] );
+//    
+//    if ( ! self.isSending ) {
+//        NSString *  filePath;
+//        
+//        // User the tag on the UIButton to determine which image to send.
+//        
+//        assert(sender.tag >= 0);
+//        filePath = [[NetworkManager sharedInstance] pathForTestImage:(NSUInteger) sender.tag];
+//        assert(filePath != nil);
+//        
+//        [self startSend:filePath];
+//    }
+//}
 
 - (IBAction)cancelAction:(id)sender
 {
@@ -354,6 +394,7 @@ enum {
     [super viewDidLoad];
     [self.startButton setTitle:NSLocalizedString(@"startButton", nil) forState:UIControlStateNormal];
     [self.uploadButton setTitle:NSLocalizedString(@"uploadButton", nil) forState:UIControlStateNormal];
+    [self.emailButton setTitle:NSLocalizedString(@"emailButtion",nil) forState:UIControlStateNormal];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -365,6 +406,7 @@ enum {
 
 - (void)viewDidUnload
 {
+    [self setEmailButton:nil];
     [super viewDidUnload];
     
     self.urlText = nil;
@@ -390,7 +432,69 @@ enum {
         filePath = [[NetworkManager sharedInstance] resultsFilePath];
         assert(filePath != nil);
         
-        [self startSend:filePath];
+        [self startSend:filePath]; 
     }
 }
+- (IBAction)emailAction:(id)sender {
+    assert( [sender isKindOfClass:[UIView class]] );
+    
+    if ( ! self.isSending ) {
+        NSString *  filePath;
+        
+        // User the tag on the UIButton to determine which image to send.
+        
+        filePath = [[NetworkManager sharedInstance] resultsFilePath];
+        assert(filePath != nil);
+        
+        [self startSend:filePath toEmail:@"shz6621091@hotmail.com"];
+    }
+
+}
+
+- (void)alertWithTitle:(NSString *)title  msg:(NSString *)msg
+{
+    if (title && msg)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:msg
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+        alert = nil;
+    }
+    
+}
+
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    
+    NSString *msg;
+    
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            msg = @"邮件发送取消";
+            break;
+        case MFMailComposeResultSaved:
+            msg = @"邮件保存成功";
+            [self alertWithTitle:nil msg:msg];
+            break;
+        case MFMailComposeResultSent:
+            msg = @"邮件发送成功";
+            [self alertWithTitle:nil msg:msg];
+            break;
+        case MFMailComposeResultFailed:
+            msg = @"邮件发送失败";
+            [self alertWithTitle:nil msg:msg];
+            break;
+        default:
+            break;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+
 @end

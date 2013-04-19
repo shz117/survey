@@ -103,6 +103,15 @@
 }
 - (IBAction)question29aNAnobuildingsAction:(UISwitch *)sender {
     [self.imi_cModelController.gloableData setObject:[NSNumber numberWithBool:[sender isOn]] forKeyedSubscript:@"isQuestion29aNAnobuildingsOn"];
+    if ([sender isOn]) {
+        [self.question29a1339storiesAnswer setOn: NO animated:YES];
+        [self.question29a1storyAnswer setOn:NO animated:YES];
+        [self.question29a23storiesAnswer setOn:NO animated:YES];
+        [self.question29a40storiesAnswer setOn:NO animated:YES];
+        [self.question29a48storiesAnswer setOn:NO animated:YES];
+        [self.question29a812storiesAnswer setOn:NO animated:YES];
+    }
     self.question29bLabel.hidden=self.question29bAnswe.hidden=self.question30Label.hidden=self.question30Answer.hidden=[sender isOn];
+    [self.imi_cModelController.gloableData setObject:[NSNumber numberWithBool:[sender isOn]] forKeyedSubscript:@"question38bActionIsHidden"];
 }
 @end

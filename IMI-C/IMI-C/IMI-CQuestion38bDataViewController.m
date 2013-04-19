@@ -7,6 +7,7 @@
 //
 
 #import "IMI-CQuestion38bDataViewController.h"
+#import "IMI_CModelController.h"
 
 @interface IMI_CQuestion38bDataViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *question38bL;
@@ -36,6 +37,12 @@
     self.question38cL.text=NSLocalizedString(@"question38cL", nil);
     self.question38bAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"question38bAnswer0", nil),NSLocalizedString(@"question38bAnswer1", nil),NSLocalizedString(@"question38bAnswer2", nil),nil];
     self.question38cAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"somealotfewnoneNA0", nil),NSLocalizedString(@"somealotfewnoneNA1", nil),NSLocalizedString(@"somealotfewnoneNA2", nil),nil];
+    BOOL isHidden =[[self.imi_cModelController.gloableData objectForKeyedSubscript:@"question38bActionIsHidden"] boolValue];
+    [self.question38bL setHidden: isHidden];
+    [self.question38bA setHidden:isHidden];
+    [self.question38cL setHidden:isHidden];
+    [self.question38cA setHidden:isHidden];
+    
 }
 
 - (void)didReceiveMemoryWarning

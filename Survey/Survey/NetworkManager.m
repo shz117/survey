@@ -91,7 +91,7 @@
         schemeMarkerRange = [trimmedStr rangeOfString:@"://"];
         
         if (schemeMarkerRange.location == NSNotFound) {
-            result = [NSURL URLWithString:[NSString stringWithFormat:@"ftp://%@", trimmedStr]];
+            result = [NSURL URLWithString:[NSString stringWithFormat:@"ftp://%@", trimmedStr]]; //what if illeagle url?
         } else {
             scheme = [trimmedStr substringWithRange:NSMakeRange(0, schemeMarkerRange.location)];
             assert(scheme != nil);
@@ -124,104 +124,104 @@
     return result;
 }
 
-- (NSString *)pathForTestImage:(NSUInteger)imageNumber
-    // In order to fully test the send and receive code paths, we need some really big 
-    // files.  Rather than carry theshe files around in our binary, we synthesise them. 
-    // Specifically, for each test image, we expand the image by an order of magnitude, 
-    // based on its image number.  That is, image 1 is not expanded, image 2 
-    // gets expanded 10 times, and so on.  We expand the image by simply copying it 
-    // to the temporary directory, writing the same data to the file over and over 
-    // again.
-{
-    NSUInteger          power;
-    NSUInteger          expansionFactor;
-    NSString *          originalFilePath;
-    NSString *          bigFilePath;
-    NSFileManager *     fileManager;
-    NSDictionary *      attrs;
-    unsigned long long  originalFileSize;
-    unsigned long long  bigFileSize;
-    
-    assert( (imageNumber >= 1) && (imageNumber <= 4) );
-
-    // Argh, C has no built-in power operator, so I have to do 10 ** (imageNumber - 1)
-    // in floating point and then cast back to integer.  Fortunately the range 
-    // of values is small enough (1..1000) that floating point isn't going 
-    // to cause me any problems.
-    
-    // On the simulator we expand by an extra order of magnitude; Macs are fast!
-    
-    power = imageNumber - 1;
-    #if TARGET_IPHONE_SIMULATOR
-        power += 1;
-    #endif
-    expansionFactor = (NSUInteger) pow(10, power);
-
-    fileManager = [NSFileManager defaultManager];
-    assert(fileManager != nil);
-    
-    // Calculate paths to both the original file and the expanded file.
-    
-    originalFilePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"TestImage%zu", (size_t) imageNumber] ofType:@"png"];
-    assert(originalFilePath != nil);
-    
-    bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"TestImage%zu.png", (size_t) imageNumber]];
-    assert(bigFilePath != nil);
-    
-    // Get the sizes of each.
-    
-    attrs = [fileManager attributesOfItemAtPath:originalFilePath error:NULL];
-    assert(attrs != nil);
-    
-    originalFileSize = [[attrs objectForKey:NSFileSize] unsignedLongLongValue];
-
-    attrs = [fileManager attributesOfItemAtPath:bigFilePath error:NULL];
-    if (attrs == NULL) {
-        bigFileSize = 0;
-    } else {
-        bigFileSize = [[attrs objectForKey:NSFileSize] unsignedLongLongValue];
-    }
-    
-    // If the expanded file is missing, or the wrong size, create it from scratch.
-    
-    if (bigFileSize != (originalFileSize * expansionFactor)) {
-        NSOutputStream *    bigFileStream;
-        NSData *            data;
-        const uint8_t *     dataBuffer;
-        NSUInteger          dataLength;
-        NSUInteger          dataOffset;
-        NSUInteger          counter;
-
-        NSLog(@"%5zu - %@", (size_t) expansionFactor, bigFilePath);
-
-        data = [NSData dataWithContentsOfMappedFile:originalFilePath];
-        assert(data != nil);
-        
-        dataBuffer = [data bytes];
-        dataLength = [data length];
-        
-        bigFileStream = [NSOutputStream outputStreamToFileAtPath:bigFilePath append:NO];
-        assert(bigFileStream != NULL);
-        
-        [bigFileStream open];
-        
-        for (counter = 0; counter < expansionFactor; counter++) {
-            dataOffset = 0;
-            while (dataOffset != dataLength) {
-                NSInteger       bytesWritten;
-                
-                bytesWritten = [bigFileStream write:&dataBuffer[dataOffset] maxLength:dataLength - dataOffset];
-                assert(bytesWritten > 0);
-                
-                dataOffset += (NSUInteger) bytesWritten;
-            }
-        }
-        
-        [bigFileStream close];
-    }
-    
-    return bigFilePath;
-}
+//- (NSString *)pathForTestImage:(NSUInteger)imageNumber
+//    // In order to fully test the send and receive code paths, we need some really big 
+//    // files.  Rather than carry theshe files around in our binary, we synthesise them. 
+//    // Specifically, for each test image, we expand the image by an order of magnitude, 
+//    // based on its image number.  That is, image 1 is not expanded, image 2 
+//    // gets expanded 10 times, and so on.  We expand the image by simply copying it 
+//    // to the temporary directory, writing the same data to the file over and over
+//    // again.
+//{
+//    NSUInteger          power;
+//    NSUInteger          expansionFactor;
+//    NSString *          originalFilePath;
+//    NSString *          bigFilePath;
+//    NSFileManager *     fileManager;
+//    NSDictionary *      attrs;
+//    unsigned long long  originalFileSize;
+//    unsigned long long  bigFileSize;
+//    
+//    assert( (imageNumber >= 1) && (imageNumber <= 4) );
+//
+//    // Argh, C has no built-in power operator, so I have to do 10 ** (imageNumber - 1)
+//    // in floating point and then cast back to integer.  Fortunately the range 
+//    // of values is small enough (1..1000) that floating point isn't going 
+//    // to cause me any problems.
+//    
+//    // On the simulator we expand by an extra order of magnitude; Macs are fast!
+//    
+//    power = imageNumber - 1;
+//    #if TARGET_IPHONE_SIMULATOR
+//        power += 1;
+//    #endif
+//    expansionFactor = (NSUInteger) pow(10, power);
+//
+//    fileManager = [NSFileManager defaultManager];
+//    assert(fileManager != nil);
+//    
+//    // Calculate paths to both the original file and the expanded file.
+//    
+//    originalFilePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"TestImage%zu", (size_t) imageNumber] ofType:@"png"];
+//    assert(originalFilePath != nil);
+//    
+//    bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"TestImage%zu.png", (size_t) imageNumber]];
+//    assert(bigFilePath != nil);
+//    
+//    // Get the sizes of each.
+//    
+//    attrs = [fileManager attributesOfItemAtPath:originalFilePath error:NULL];
+//    assert(attrs != nil);
+//    
+//    originalFileSize = [[attrs objectForKey:NSFileSize] unsignedLongLongValue];
+//
+//    attrs = [fileManager attributesOfItemAtPath:bigFilePath error:NULL];
+//    if (attrs == NULL) {
+//        bigFileSize = 0;
+//    } else {
+//        bigFileSize = [[attrs objectForKey:NSFileSize] unsignedLongLongValue];
+//    }
+//    
+//    // If the expanded file is missing, or the wrong size, create it from scratch.
+//    
+//    if (bigFileSize != (originalFileSize * expansionFactor)) {
+//        NSOutputStream *    bigFileStream;
+//        NSData *            data;
+//        const uint8_t *     dataBuffer;
+//        NSUInteger          dataLength;
+//        NSUInteger          dataOffset;
+//        NSUInteger          counter;
+//
+//        NSLog(@"%5zu - %@", (size_t) expansionFactor, bigFilePath);
+//
+//        data = [NSData dataWithContentsOfMappedFile:originalFilePath];
+//        assert(data != nil);
+//        
+//        dataBuffer = [data bytes];
+//        dataLength = [data length];
+//        
+//        bigFileStream = [NSOutputStream outputStreamToFileAtPath:bigFilePath append:NO];
+//        assert(bigFileStream != NULL);
+//        
+//        [bigFileStream open];
+//        
+//        for (counter = 0; counter < expansionFactor; counter++) {
+//            dataOffset = 0;
+//            while (dataOffset != dataLength) {
+//                NSInteger       bytesWritten;
+//                
+//                bytesWritten = [bigFileStream write:&dataBuffer[dataOffset] maxLength:dataLength - dataOffset];
+//                assert(bytesWritten > 0);
+//                
+//                dataOffset += (NSUInteger) bytesWritten;
+//            }
+//        }
+//        
+//        [bigFileStream close];
+//    }
+//    
+//    return bigFilePath;
+//}
 
 - (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix
 {

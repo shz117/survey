@@ -35,7 +35,7 @@
 	// Do any additional setup after loading the view.
     self.question17cL.text=NSLocalizedString(@"question17cL", nil);
     self.question17dL.text=NSLocalizedString(@"question17dL", nil);
-    self.question17cAArray = [NSArray arrayWithObjects:NSLocalizedString(@"question17cA0", nil),NSLocalizedString(@"question17cA1", nil),NSLocalizedString(@"question17cA2", nil),nil];
+    self.question17cAArray = [NSArray arrayWithObjects:NSLocalizedString(@"question17cA2", nil),NSLocalizedString(@"question17cA0", nil),NSLocalizedString(@"question17cA1", nil),nil];
     self.question17dAArray = [NSArray arrayWithObjects:NSLocalizedString(@"yesnoNA0", nil),NSLocalizedString(@"yesnoNA1", nil),nil];
     self.question17cL.hidden=self.question17cA.hidden=self.question17dL.hidden=self.question17dA.hidden=![[self.imi_cModelController.gloableData objectForKeyedSubscript:@"question17aAnswer"] boolValue];
     self.SkiptonextpageLabel.text=NSLocalizedString(@"SkiptonextpageLabel", nil);

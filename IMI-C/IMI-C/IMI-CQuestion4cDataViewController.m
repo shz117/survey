@@ -60,7 +60,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.q4cTitle.text=NSLocalizedString(@"q4cTitle", nil);
-    self.q4cAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"question4cAnswer8", nil),NSLocalizedString(@"question4cAnswer0", nil),NSLocalizedString(@"question4cAnswer1", nil),nil];
+    self.q4cAnswerArray = [NSArray arrayWithObjects: NSLocalizedString(@"question4cAnswer0", nil),NSLocalizedString(@"question4cAnswer1", nil),nil];
     self.q5aTitle.text=NSLocalizedString(@"q5aTitle", nil);
     self.trafficLabel.text=NSLocalizedString(@"trafficLabel", nil);
     self.stopLabel.text=NSLocalizedString(@"stopLabel", nil);

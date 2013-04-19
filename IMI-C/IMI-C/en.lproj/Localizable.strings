@@ -28,6 +28,7 @@
 "submitButton" = "Save";
 "startButton" = "Start a New Survey";
 "uploadButton" = "Upload Survey Results";
+"emailButtion" = "Email Survey Results";
 "streetCrossingTitle"="Street Crossing";
 "question3aTitle"="2a. Consider the places on the segment that are intended for pedestrians to cross the street.  Are these places marked for pedestrian crossing? Mark N/A if there are no intended places to cross.";
 "question3aAnswer8"="NA";
@@ -40,11 +41,11 @@
 "zebraLabel"="Zebra striping";
 "roadSurfaceLabel"="Different road surface or paving (e.g. tiles, colored concrete, marble, etc.)";
 "otherLabel"="Other";
-"question3cTitle"="2c. If yes, is the location of the marking convenient?";
+"question3cTitle"="2c. Is the location of the marking convenient?";
 "question3cAnswer0"="no";
 "question3cAnswer1"="somewhat";
 "question3cAnswer2"="yes";
-"question3dTitle"="2d. If no, would this intersection be safer or more convenient if there were a marking?";
+"question3dTitle"="2d. Would this intersection be safer or more convenient if there were a marking?";
 "question4aTitle"="3a. Are there curb cuts at all places where crossing is expected to occur? Mark N/A if there are no intended places to cross.";
 "question4aAnswer8"="NA";
 "question4aAnswer0"="none";
