@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Dropbox/Dropbox.h>
 
 @interface IMI_CAppDelegate : UIResponder <UIApplicationDelegate>
 

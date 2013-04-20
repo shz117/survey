@@ -86,6 +86,8 @@ enum {
 @property (nonatomic, assign, readwrite) size_t            bufferLimit;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *uploadButton;
+
+
 - (IBAction)uploadAction:(id)sender;
 - (IBAction)emailAction:(id)sender;
 @property(nonatomic,assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
@@ -421,6 +423,23 @@ enum {
 {
     [self stopSendWithStatus:@"Stopped"];
 }
+
+//code to send to FTP server 
+//- (IBAction)uploadAction:(id)sender {
+//    assert( [sender isKindOfClass:[UIView class]] );
+//    
+//    if ( ! self.isSending ) {
+//        NSString *  filePath;
+//        
+//        // User the tag on the UIButton to determine which image to send.
+//        
+//        filePath = [[NetworkManager sharedInstance] resultsFilePath];
+//        assert(filePath != nil);
+//        
+//        [self startSend:filePath]; 
+//    }
+//}
+
 - (IBAction)uploadAction:(id)sender {
     assert( [sender isKindOfClass:[UIView class]] );
     
@@ -431,10 +450,28 @@ enum {
         
         filePath = [[NetworkManager sharedInstance] resultsFilePath];
         assert(filePath != nil);
+        if (![self.manager.linkedAccounts objectAtIndex:0]){
+        [[DBAccountManager sharedManager] linkFromController:self];
+        }
+        DBAccount* account = [self.manager.linkedAccounts objectAtIndex:0];
+        if (account) {
+            DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+            [DBFilesystem setSharedFilesystem:filesystem];
+        }
         
-        [self startSend:filePath]; 
+        
+        DBPath *newPath = [[DBPath root] childPath:@"Surveyresults.csv"];
+        DBFile *file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
+        [file writeContentsOfFile:filePath shouldSteal:YES error: nil];
+        //[self startSend:filePath];
     }
 }
+
+- (DBAccountManager *)manager {
+	return [DBAccountManager sharedManager];
+}
+
+
 - (IBAction)emailAction:(id)sender {
     assert( [sender isKindOfClass:[UIView class]] );
     
@@ -445,6 +482,8 @@ enum {
         
         filePath = [[NetworkManager sharedInstance] resultsFilePath];
         assert(filePath != nil);
+        
+        
         
         [self startSend:filePath toEmail:@"shz6621091@hotmail.com"];
     }

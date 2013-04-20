@@ -14,7 +14,19 @@
 {
     // Override point for customization after application launch.
     [IMI_CModelController initResultsFile];
+    DBAccountManager* accountMgr = [[DBAccountManager alloc] initWithAppKey:@"t3ow4tvu36zlh5s" secret:@"w4nmqlk5ul1uiw8"];
+    [DBAccountManager setSharedManager:accountMgr];
+    
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)source annotation:(id)annotation {
+    DBAccount *account = [[DBAccountManager sharedManager] handleOpenURL:url];
+    if (account) {
+        NSLog(@"App linked successfully!");
+        return YES;
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

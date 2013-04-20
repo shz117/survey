@@ -42,6 +42,9 @@
 }
 
 - (IBAction)submit:(UIButton *)sender {
+    
+    NSLog(@"data is %@", self.dataArray);
+    
     [self.imi_cModelController submitResults];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
