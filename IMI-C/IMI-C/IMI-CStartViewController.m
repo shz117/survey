@@ -151,64 +151,97 @@ enum {
     return (self.networkStream != nil);
 }
 
-- (void)startSend:(NSString *)filePath
+//- (void)startSend:(NSString *)filePath
+//{
+//    BOOL                    success;
+//    NSURL *                 url;
+//    
+//    assert(filePath != nil);
+//    assert([[NSFileManager defaultManager] fileExistsAtPath:filePath]);    
+//    assert(self.networkStream == nil);      // don't tap send twice in a row!
+//    assert(self.fileStream == nil);         // ditto
+//    
+//    // First get and check the URL.
+//    
+//    url = [[NetworkManager sharedInstance] smartURLForString:@"ftp://urbanimprint.com/SurveyResults/"];
+//    success = (url != nil);
+//    
+//    if (success) {
+//        // Add the last part of the file name to the end of the URL to form the final
+//        // URL that we're going to put to.
+//        
+//        url = CFBridgingRelease(
+//                                CFURLCreateCopyAppendingPathComponent(NULL, (__bridge CFURLRef) url, (__bridge CFStringRef) [filePath lastPathComponent], false)
+//                                );
+//        success = (url != nil);
+//    }
+//    
+//    // If the URL is bogus, let the user know.  Otherwise kick off the connection.
+//    
+//    if ( ! success) {
+//        self.statusLabel.text = @"Invalid URL";
+//    } else {
+//        
+//        // Open a stream for the file we're going to send.  We do not open this stream;
+//        // NSURLConnection will do it for us.
+//        
+//        self.fileStream = [NSInputStream inputStreamWithFileAtPath:filePath];
+//        assert(self.fileStream != nil);
+//        
+//        [self.fileStream open];
+//        
+//        // Open a CFFTPStream for the URL.
+//        
+//        self.networkStream = CFBridgingRelease(
+//                                               CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url)
+//                                               );
+//        assert(self.networkStream != nil);
+//            success = [self.networkStream setProperty:@"jeremy@urbanimprint.com" forKey:(id)kCFStreamPropertyFTPUserName];
+//            assert(success);
+//            success = [self.networkStream setProperty:@"China2012!!" forKey:(id)kCFStreamPropertyFTPPassword];
+//            assert(success);        
+//        self.networkStream.delegate = self;
+//        [self.networkStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+//        [self.networkStream open];
+//        
+//        // Tell the UI we're sending.
+//        
+//        [self sendDidStart];
+//    }
+//}
+
+#pragma -mark startSend filePath
+- (void)startSend:(NSString *)filePath withDBAccount:(DBAccount *) account
 {
-    BOOL                    success;
-    NSURL *                 url;
     
-    assert(filePath != nil);
-    assert([[NSFileManager defaultManager] fileExistsAtPath:filePath]);    
-    assert(self.networkStream == nil);      // don't tap send twice in a row!
-    assert(self.fileStream == nil);         // ditto
     
-    // First get and check the URL.
-    
-    url = [[NetworkManager sharedInstance] smartURLForString:@"ftp://urbanimprint.com/SurveyResults/"];
-    success = (url != nil);
-    
-    if (success) {
-        // Add the last part of the file name to the end of the URL to form the final
-        // URL that we're going to put to.
-        
-        url = CFBridgingRelease(
-                                CFURLCreateCopyAppendingPathComponent(NULL, (__bridge CFURLRef) url, (__bridge CFStringRef) [filePath lastPathComponent], false)
-                                );
-        success = (url != nil);
+    if (account) {
+        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
+        [DBFilesystem setSharedFilesystem:filesystem];
     }
     
-    // If the URL is bogus, let the user know.  Otherwise kick off the connection.
-    
-    if ( ! success) {
-        self.statusLabel.text = @"Invalid URL";
+//    NSLog(@"fiel path is:%@",filePath);
+    NSString* fileName = [filePath substringFromIndex: [filePath length] - 18];
+    DBPath *newPath = [[DBPath root] childPath:fileName];
+//    NSLog(@"db path is:%@",newPath);
+    DBFile *file;
+    if (![[DBFilesystem sharedFilesystem]fileInfoForPath:newPath error:nil].path){
+        file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
     } else {
-        
-        // Open a stream for the file we're going to send.  We do not open this stream;
-        // NSURLConnection will do it for us.
-        
-        self.fileStream = [NSInputStream inputStreamWithFileAtPath:filePath];
-        assert(self.fileStream != nil);
-        
-        [self.fileStream open];
-        
-        // Open a CFFTPStream for the URL.
-        
-        self.networkStream = CFBridgingRelease(
-                                               CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url)
-                                               );
-        assert(self.networkStream != nil);
-            success = [self.networkStream setProperty:@"jeremy@urbanimprint.com" forKey:(id)kCFStreamPropertyFTPUserName];
-            assert(success);
-            success = [self.networkStream setProperty:@"China2012!!" forKey:(id)kCFStreamPropertyFTPPassword];
-            assert(success);        
-        self.networkStream.delegate = self;
-        [self.networkStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [self.networkStream open];
-        
-        // Tell the UI we're sending.
-        
-        [self sendDidStart];
+        [[DBFilesystem sharedFilesystem] deletePath:newPath error:nil];
+        file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
     }
+//    NSLog(@"dbfiel is:%@",file);
+
+    [file writeContentsOfFile:filePath shouldSteal:NO error: nil];
+
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"uploadButton", nil) message:NSLocalizedString(@"Uploadsucceeded", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+
+    
+    [self sendDidStart];
+    
 }
+
 
 //send to email address
 - (void)startSend: (NSString *)filePath toEmail: (NSString *)emailAddress
@@ -450,20 +483,14 @@ enum {
         
         filePath = [[NetworkManager sharedInstance] resultsFilePath];
         assert(filePath != nil);
-        if (![self.manager.linkedAccounts objectAtIndex:0]){
-        [[DBAccountManager sharedManager] linkFromController:self];
+        if (!self.manager.linkedAccount.isLinked){
+            [[DBAccountManager sharedManager] linkFromController:self];
         }
         DBAccount* account = [self.manager.linkedAccounts objectAtIndex:0];
-        if (account) {
-            DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
-            [DBFilesystem setSharedFilesystem:filesystem];
+        //    NSLog(@"the accout is: %@",[self.manager.linkedAccounts objectAtIndex:0]);
+        if (account){
+            [self startSend:filePath withDBAccount:account];
         }
-        
-        
-        DBPath *newPath = [[DBPath root] childPath:@"Surveyresults.csv"];
-        DBFile *file = [[DBFilesystem sharedFilesystem] createFile:newPath error:nil];
-        [file writeContentsOfFile:filePath shouldSteal:YES error: nil];
-        //[self startSend:filePath];
     }
 }
 
