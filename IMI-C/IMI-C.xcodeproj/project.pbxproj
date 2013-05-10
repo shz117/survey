@@ -83,12 +83,12 @@
 		8DD319011611EEAE00CF6E3A /* IMI-CSubmitDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD319001611EEAE00CF6E3A /* IMI-CSubmitDataViewController.m */; };
 		8DD319171612019300CF6E3A /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD319151612019300CF6E3A /* NetworkManager.m */; };
 		8DD3191D1612092E00CF6E3A /* IMI-CStartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD3191C1612092E00CF6E3A /* IMI-CStartViewController.m */; };
-		F94098671721EC4200CFDE8D /* Dropbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94098661721EC4200CFDE8D /* Dropbox.framework */; };
 		F94098691721F03E00CFDE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94098681721F03E00CFDE8D /* SystemConfiguration.framework */; };
 		F940986B1721F04900CFDE8D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940986A1721F04900CFDE8D /* Security.framework */; };
 		F940986D1721F05400CFDE8D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F940986C1721F05400CFDE8D /* libsqlite3.dylib */; };
 		F940986F1721F06800CFDE8D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940986E1721F06800CFDE8D /* QuartzCore.framework */; };
 		F97DAB6D16FC13EC001B78F4 /* SurveyIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = F97DAB6C16FC13EB001B78F4 /* SurveyIcon.png */; };
+		F9CB7E8E173B170500E5DA2F /* Dropbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9CB7E8D173B170500E5DA2F /* Dropbox.framework */; };
 		F9F3392E1714662400AFADB1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F3392D1714662400AFADB1 /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
@@ -242,12 +242,12 @@
 		8DD319161612019300CF6E3A /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
 		8DD3191B1612092E00CF6E3A /* IMI-CStartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IMI-CStartViewController.h"; sourceTree = "<group>"; };
 		8DD3191C1612092E00CF6E3A /* IMI-CStartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IMI-CStartViewController.m"; sourceTree = "<group>"; };
-		F94098661721EC4200CFDE8D /* Dropbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Dropbox.framework; path = "../../../../Downloads/dropbox-ios-sync-sdk-1.0.7/Dropbox.framework"; sourceTree = "<group>"; };
 		F94098681721F03E00CFDE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F940986A1721F04900CFDE8D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F940986C1721F05400CFDE8D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		F940986E1721F06800CFDE8D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F97DAB6C16FC13EB001B78F4 /* SurveyIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SurveyIcon.png; sourceTree = "<group>"; };
+		F9CB7E8D173B170500E5DA2F /* Dropbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Dropbox.framework; path = "../../../../Desktop/IOS相关/demos&sdks/dropbox-ios-sync-sdk-1.0.7/Dropbox.framework"; sourceTree = "<group>"; };
 		F9F3392D1714662400AFADB1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -265,7 +265,7 @@
 				8D824AF31609696600768A95 /* UIKit.framework in Frameworks */,
 				8D824AF51609696600768A95 /* Foundation.framework in Frameworks */,
 				8D824AF71609696600768A95 /* CoreGraphics.framework in Frameworks */,
-				F94098671721EC4200CFDE8D /* Dropbox.framework in Frameworks */,
+				F9CB7E8E173B170500E5DA2F /* Dropbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,9 +306,9 @@
 		8D824AF11609696600768A95 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F94098661721EC4200CFDE8D /* Dropbox.framework */,
 				F9F3392D1714662400AFADB1 /* MessageUI.framework */,
 				8D15F10F16191427009976B4 /* CFNetwork.framework */,
+				F9CB7E8D173B170500E5DA2F /* Dropbox.framework */,
 				8D824AF21609696600768A95 /* UIKit.framework */,
 				8D824AF41609696600768A95 /* Foundation.framework */,
 				8D824AF61609696600768A95 /* CoreGraphics.framework */,
@@ -700,6 +700,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../Downloads/dropbox-ios-sync-sdk-1.0.7\"",
+					"\"$(SRCROOT)/../../../../Desktop/IOS相关/demos&sdks/dropbox-ios-sync-sdk-1.0.7\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IMI-C/IMI-C-Prefix.pch";
@@ -716,6 +717,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../Downloads/dropbox-ios-sync-sdk-1.0.7\"",
+					"\"$(SRCROOT)/../../../../Desktop/IOS相关/demos&sdks/dropbox-ios-sync-sdk-1.0.7\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IMI-C/IMI-C-Prefix.pch";
@@ -769,14 +771,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../../Downloads/dropbox-ios-sync-sdk-1.0.7\"",
+					"\"$(SRCROOT)/../../../../Desktop/IOS相关/demos&sdks/dropbox-ios-sync-sdk-1.0.7\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IMI-C/IMI-C-Prefix.pch";
 				INFOPLIST_FILE = "IMI-C/IMI-C-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "113D3912-125D-4B22-8919-578E7DA50FC4";
-				"PROVISIONING_PROFILE[sdk=*]" = "113D3912-125D-4B22-8919-578E7DA50FC4";
+				PROVISIONING_PROFILE = "B2B93F42-C402-4DA6-96B4-561D696BA579";
+				"PROVISIONING_PROFILE[sdk=*]" = "B2B93F42-C402-4DA6-96B4-561D696BA579";
 				WRAPPER_EXTENSION = app;
 			};
 			name = archive;
